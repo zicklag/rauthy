@@ -775,7 +775,7 @@ impl AuthProviderCallback {
         }
     }
 
-    async fn save(&self) -> Result<(), ErrorResponse> {
+    pub async fn save(&self) -> Result<(), ErrorResponse> {
         DB::client()
             .put(
                 Cache::AuthProviderCallback,
