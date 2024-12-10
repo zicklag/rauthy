@@ -15,6 +15,8 @@ use rauthy_common::utils::UseDummyAddress;
 use rauthy_common::{is_sqlite, password_hasher};
 use rauthy_handlers::openapi::ApiDoc;
 use rauthy_handlers::{
+    api_keys, atproto, auth_providers, blacklist, clients, events, fed_cm, generic, groups, oidc,
+    roles, scopes, sessions, users,
     api_keys, auth_providers, blacklist, clients, events, fed_cm, generic, groups, html, oidc,
     roles, scopes, sessions, themes, users,
 };
@@ -523,7 +525,10 @@ async fn actix_main(app_state: web::Data<AppState>) -> std::io::Result<()> {
                             .service(oidc::get_well_known)
                             .service(generic::get_health)
                             .service(generic::get_ready)
-                            .service(html::get_static_assets),
+                            .service(html::get_static_assets)
+                            .service(atproto::get_client_metadata)
+                            .service(atproto::post_login)
+                            .service(atproto::post_callback),
                     ),
             );
 
