@@ -274,11 +274,11 @@ impl StateStore for DB {}
 impl Store<Did, Session> for DB {
     type Error = hiqlite::Error;
 
-    async fn get(&self, key: &Did) -> Result<Option<Atproto>, Self::Error> {
+    async fn get(&self, key: &Did) -> Result<Option<Session>, Self::Error> {
         Self::client().get(Cache::Atproto, key.to_string()).await
     }
 
-    async fn set(&self, key: Did, value: Atproto) -> Result<(), Self::Error> {
+    async fn set(&self, key: Did, value: Session) -> Result<(), Self::Error> {
         Self::client()
             .put(Cache::Atproto, key.to_string(), &value, CACHE_TTL_SESSION)
             .await

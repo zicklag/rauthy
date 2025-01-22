@@ -1,0 +1,12 @@
+[project]
+authors = ["Zicklag <zicklag@katharostech.com>"]
+channels = ["conda-forge"]
+description = "Add a short description here"
+name = "rauthy"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+libstdcxx = ">=14.2.0,<15"

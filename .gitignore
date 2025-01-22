@@ -17,3 +17,6 @@ book/book
 out/
 .npm_cache
 pnpm-lock.yaml
+# pixi environments
+.pixi
+*.egg-info

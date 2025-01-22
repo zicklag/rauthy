@@ -15,10 +15,8 @@ use rauthy_common::utils::UseDummyAddress;
 use rauthy_common::{is_sqlite, password_hasher};
 use rauthy_handlers::openapi::ApiDoc;
 use rauthy_handlers::{
-    api_keys, atproto, auth_providers, blacklist, clients, events, fed_cm, generic, groups, oidc,
-    roles, scopes, sessions, users,
-    api_keys, auth_providers, blacklist, clients, events, fed_cm, generic, groups, html, oidc,
-    roles, scopes, sessions, themes, users,
+    api_keys, atproto, auth_providers, blacklist, clients, events, fed_cm, generic, groups, html,
+    oidc, roles, scopes, sessions, themes, users,
 };
 use rauthy_middlewares::csrf_protection::CsrfProtectionMiddleware;
 use rauthy_middlewares::ip_blacklist::RauthyIpBlacklistMiddleware;
