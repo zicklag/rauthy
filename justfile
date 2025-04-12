@@ -1,7 +1,7 @@
 set dotenv-load := true
 set positional-arguments := true
 
-export TAG := `cat Cargo.toml | grep '^version =' | cut -d " " -f3 | xargs`
+export TAG := 'latest'
 export TODAY := `date +%Y%m%d`
 export DEV_HOST := `echo ${PUB_URL:-localhost:8080} | cut -d':' -f1`
 export USER := `echo "$(id -u):$(id -g)"`
@@ -337,7 +337,7 @@ build image="ghcr.io/sebadob/rauthy": build-ui
     # https://github.com/cross-rs/cross/security/advisories/GHSA-2r9g-5qvw-fgmf
     # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=95189
     {{ docker }} run \
-      -v {{ cargo_home }}/registry:{{ container_cargo_registry }} \
+      -u "$(id -u):$(id -g)" \
       -v {{ invocation_directory() }}/:/work/ \
       -w /work \
       {{ map_docker_user }} \
@@ -347,24 +347,24 @@ build image="ghcr.io/sebadob/rauthy": build-ui
       cargo build --release --target x86_64-unknown-linux-gnu
     cp target/x86_64-unknown-linux-gnu/release/rauthy out/rauthy_amd64
 
-    # TODO here is potential to unify both images into a `dockerx` build which could
-    # potentially speed up the build process in exchange for more complex images.
-    # Depending on the target arch, the `--target` would be added dynamically inside
-    # the container.
-    {{ docker }} run \
-      -v {{ cargo_home }}/registry:{{ container_cargo_registry }} \
-      -v {{ invocation_directory() }}/:/work/ \
-      -w /work \
-      {{ map_docker_user }} \
-      --net {{ container_network }} \
-      -e DATABASE_URL=postgresql://rauthy:123SuperSafe@rauthy-db-postgres:5432/rauthy \
-      {{ builder_image }}:{{ builder_tag_date }} \
-      cargo build --release --target aarch64-unknown-linux-gnu
-    cp target/aarch64-unknown-linux-gnu/release/rauthy out/rauthy_arm64
+    # # TODO here is potential to unify both images into a `dockerx` build which could
+    # # potentially speed up the build process in exchange for more complex images.
+    # # Depending on the target arch, the `--target` would be added dynamically inside
+    # # the container.
+    # {{ docker }} run \
+    #   -v {{ cargo_home }}/registry:{{ container_cargo_registry }} \
+    #   -v {{ invocation_directory() }}/:/work/ \
+    #   -w /work \
+    #   {{ map_docker_user }} \
+    #   --net {{ container_network }} \
+    #   -e DATABASE_URL=postgresql://rauthy:123SuperSafe@rauthy-db-postgres:5432/rauthy \
+    #   {{ builder_image }}:{{ builder_tag_date }} \
+    #   cargo build --release --target aarch64-unknown-linux-gnu
+    # cp target/aarch64-unknown-linux-gnu/release/rauthy out/rauthy_arm64
 
     {{ docker }} buildx build \
         -t {{ image }}:$TAG \
-        --platform linux/amd64,linux/arm64 \
+        --platform linux/amd64 \
         --push \
         .
 

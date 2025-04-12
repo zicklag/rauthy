@@ -583,8 +583,8 @@ async fn connect_test_smtp(
     // always try fully wrapped TLS first
     let mut builder = AsyncSmtpTransport::<lettre::Tokio1Executor>::relay(smtp_url)
         .expect("Connection Error with 'SMTP_URL'");
-    if let Some(port) = SMTP_PORT.as_deref() {
-        builder = builder.port(SMTP_PORT.as_deref().unwrap());
+    if let Some(port) = *SMTP_PORT {
+        builder = builder.port(port);
     }
     let mut conn = builder
         .credentials(creds.clone())
@@ -604,8 +604,8 @@ async fn connect_test_smtp(
     // only if full TLS fails, try STARTTLS
     builder = AsyncSmtpTransport::<lettre::Tokio1Executor>::starttls_relay(smtp_url)
         .expect("Connection Error with 'SMTP_URL'");
-    if let Some(port) = SMTP_PORT.as_deref() {
-        builder = builder.port(SMTP_PORT.as_deref().unwrap());
+    if let Some(port) = *SMTP_PORT {
+        builder = builder.port(port);
     }
     conn = builder
         .credentials(creds)
@@ -636,7 +636,7 @@ async fn connect_test_smtp(
 async fn conn_test_smtp_insecure(
     smtp_url: &str,
 ) -> Result<AsyncSmtpTransport<lettre::Tokio1Executor>, ErrorResponse> {
-    let port = SMTP_PORT.as_derf().unwrap_or(1025);
+    let port = SMTP_PORT.unwrap_or(1025);
 
     let conn = AsyncSmtpTransport::<lettre::Tokio1Executor>::builder_dangerous(smtp_url)
         .port(port)
